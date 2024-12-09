@@ -2,7 +2,7 @@
   <ParticlesBackground class="opacity-40"></ParticlesBackground>
 
   <div class="min-h-screen bg-dark text-white flex flex-col items-center">
-    <Header class="mt-8"></Header>
+    <Header class="mt-8 mb-8"></Header>
 
     <div class="grid grid-cols-3 gap-[20px] main">
       <!-- Left Column -->
@@ -13,7 +13,7 @@
 
       <!-- Middle Column -->
       <div class="flex flex-col w-full">
-        <PhaseTracker />
+        <PhaseTracker :cycleStartDate="'2024-12-01'"></PhaseTracker>
       </div>
 
       <!-- Right Column -->
@@ -37,6 +37,7 @@ import CursorGlow from "src/components/CursorGlow.vue";
 
 export default {
   name: "Home",
+  mounted() {},
   components: {
     Header,
     PhaseTracker,
