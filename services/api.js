@@ -81,3 +81,32 @@ export const getRecipeDetails = async (id) => {
     throw error;
   }
 };
+
+//UNSPLASH
+
+const unsplashAPI = axios.create({
+  baseURL: "https://api.unsplash.com", // URL base de Unsplash
+  headers: {
+    Authorization: `Client-ID ${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`, // Clave de acceso
+  },
+});
+
+// Función para buscar imágenes en Unsplash
+export const searchImages = async (query) => {
+  try {
+    const response = await unsplashAPI.get("/search/photos", {
+      params: {
+        query, // palabra de busqueda
+        per_page: 1,
+      },
+    });
+    console.log("Imágenes encontradas:", response.data.results);
+    return response.data.results; // Devuelve las imágenes encontradas
+  } catch (error) {
+    console.error(
+      "Error al buscar imágenes en Unsplash:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
