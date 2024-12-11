@@ -14,8 +14,29 @@
 </template>
 
 <script>
+import { searchRecipes, getRecipeDetails } from "/services/api.js";
+
 export default {
   name: "CardRecipe",
+  data() {
+    return {
+      recipe: null, // Almacena la receta seleccionada
+    };
+  },
+  async mounted() {
+    // Buscar una receta
+    try {
+      const results = await searchRecipes("pasta", { number: 1 }); // Buscar una receta
+      if (results.length > 0) {
+        this.recipe = await getRecipeDetails(results[0].id); // Obtener los datos de la primera receta
+        console.log("Detalles de la receta seleccionada:", this.recipe);
+      } else {
+        console.error("No se encontraron recetas.");
+      }
+    } catch (error) {
+      console.error("Error en la llamada:", error);
+    }
+  },
 };
 </script>
 
