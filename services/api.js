@@ -26,14 +26,26 @@ export const getModelResponse = async (model, inputText) => {
   }
 };
 
-// Función específica para probar el modelo Mistral
-export const testMistralModel = async () => {
-  const inputText =
-    "Generate a personalized tip for a user in the follicular phase";
-  return await getModelResponse(
-    "mistralai/Mistral-Nemo-Instruct-2407",
-    inputText
-  );
+// // Función específica para probar el modelo Mistral
+// export const testMistralModel = async () => {
+//   const inputText =
+//     "Generate a personalized tip for a user in the follicular phase";
+//   return await getModelResponse(
+//     "mistralai/Mistral-Nemo-Instruct-2407",
+//     inputText
+//   );
+// };
+
+// Función para generar etiquetas para Unsplash desde el "tip"
+export const getUnsplashLabels = async (tip) => {
+  const inputText = `Based on this tip, generate 3 concise keywords specifically for image searches: "${tip}"`;
+  return await getModelResponse("Qwen/Qwen2.5-Coder-32B-Instruct", inputText);
+};
+
+// Función para generar etiquetas para Spoonacular desde el "tip"
+export const getSpoonacularLabels = async (tip) => {
+  const inputText = `Based on this tip, generate 3 concise keywords specifically for recipe searches: "${tip}"`;
+  return await getModelResponse("Qwen/Qwen2.5-Coder-32B-Instruct", inputText);
 };
 
 //Spoonacular
