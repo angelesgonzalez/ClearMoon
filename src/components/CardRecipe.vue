@@ -2,13 +2,33 @@
   <div class="container flex flex-col items-start p-6 rounded-[18px]">
     <div class="p-4">
       <h3 class="text-sm font-semibold opacity-60">Today's recipe</h3>
+
+      <h2
+        v-if="recipe && recipe.title"
+        class="text-sm font-semibold capitalize">
+        {{ recipe.title }}
+      </h2>
     </div>
+
     <div
       class="flex w-full h-[219px] items-center rounded-[18px] overflow-hidden">
+      <div v-if="isLoading" class="text-center">Cargando receta...</div>
+
+      <div v-else-if="error" class="">{{ error }}</div>
+
+      <!-- Imagen de la receta -->
       <img
+        v-else-if="recipe && recipe.image"
+        :src="recipe.image"
+        :alt="recipe.title || 'Recipe image'"
+        class="w-full h-auto object-cover rounded-[18px]" />
+
+      <!-- Imagen por defecto -->
+      <img
+        v-else
         src="src/assets/dummy-recipe.png"
-        alt="Delicious waffle with fruits"
-        class="w-full h-auto object-cover" />
+        alt="Default recipe image"
+        class="w-full h-auto object-cover rounded-[18px]" />
     </div>
   </div>
 </template>
@@ -21,7 +41,9 @@ export default {
   name: "CardRecipe",
   data() {
     return {
-      recipe: null, // Almacena la receta seleccionada
+      recipe: null, // Info de la receta
+      isLoading: true,
+      error: null,
     };
   },
   computed: {
@@ -31,25 +53,46 @@ export default {
     },
   },
   async mounted() {
-    // Buscar una receta
-    try {
-      console.log("Etiquetas de Spoonacular:", this.spoonacularLabels);
+    const searchStore = useSearchStore();
 
-      const results = await searchRecipes(
-        this.spoonacularLabels[0] || "Smoothie",
-        { number: 1 }
-      );
+    try {
+      // Asegurarse de que las etiquetas estén disponibles
+      if (!searchStore.spoonacularLabels.length) {
+        searchStore.spoonacularLabels = ["Smoothie"]; // Etiqueta predeterminada
+      }
+
+      // console.log("Etiquetas de Spoonacular:", this.spoonacularLabels);
+
+      // busqueda de recetas
+      const results = await searchRecipes(this.spoonacularLabels[0], {
+        number: 1,
+      });
+
       if (results.length > 0) {
+        // detalles de la receta
         this.recipe = await getRecipeDetails(results[0].id);
-        console.log("Detalles de la receta seleccionada:", this.recipe);
+
+        // Fallback para propiedades faltantes
+        if (this.recipe) {
+          this.recipe.title = this.recipe.title || "Today's Smothie";
+          this.recipe.image =
+            this.recipe.image || "src/assets/dummy-recipe.png";
+        }
+
+        // console.log("Detalles de la receta seleccionada:", this.recipe);
       } else {
-        console.error("No se encontraron recetas.");
+        this.error = "No se encontraron recetas.";
       }
     } catch (error) {
       console.error("Error en la llamada:", error);
+      this.error = "Hubo un problema al cargar la receta.";
+    } finally {
+      this.isLoading = false;
     }
   },
 };
 </script>
+
+<style></style>
 
 <style></style>
