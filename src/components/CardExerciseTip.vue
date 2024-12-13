@@ -22,7 +22,7 @@ export default {
   name: "CardExerciseTip",
   data() {
     return {
-      images: null,
+      image: null,
     };
   },
   async mounted() {
@@ -30,8 +30,8 @@ export default {
     try {
       const results = await searchImages("yoga");
       if (results.length > 0) {
-        this.image = results[0]; // primera imagen
-        console.log("Imagen seleccionada:", this.image);
+        this.image = results[0];
+        // console.log("Imagen seleccionada:", this.image);
       } else {
         console.error("No se encontraron imágenes.");
       }
