@@ -15,6 +15,7 @@
 
 <script>
 import { searchRecipes, getRecipeDetails } from "/services/api.js";
+import { useSearchStore } from "src/stores/useSearchStore.js";
 
 export default {
   name: "CardRecipe",
@@ -23,12 +24,23 @@ export default {
       recipe: null, // Almacena la receta seleccionada
     };
   },
+  computed: {
+    spoonacularLabels() {
+      const searchStore = useSearchStore();
+      return searchStore.spoonacularLabels || [];
+    },
+  },
   async mounted() {
     // Buscar una receta
     try {
-      const results = await searchRecipes("Smoothie", { number: 1 }); // Buscar una receta
+      console.log("Etiquetas de Spoonacular:", this.spoonacularLabels);
+
+      const results = await searchRecipes(
+        this.spoonacularLabels[0] || "Smoothie",
+        { number: 1 }
+      );
       if (results.length > 0) {
-        this.recipe = await getRecipeDetails(results[0].id); // Obtener los datos de la primera receta
+        this.recipe = await getRecipeDetails(results[0].id);
         console.log("Detalles de la receta seleccionada:", this.recipe);
       } else {
         console.error("No se encontraron recetas.");

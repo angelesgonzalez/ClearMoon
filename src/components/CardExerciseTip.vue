@@ -28,7 +28,7 @@ export default {
   async mounted() {
     // Buscar una imagen relacionada
     try {
-      const results = await searchImages("yoga");
+      const results = await searchImages(this.unsplashLabels[0] || "yoga");
       if (results.length > 0) {
         this.image = results[0];
         // console.log("Imagen seleccionada:", this.image);
