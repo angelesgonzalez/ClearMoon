@@ -26,7 +26,7 @@ export default {
   async mounted() {
     // Buscar una receta
     try {
-      const results = await searchRecipes("pasta", { number: 1 }); // Buscar una receta
+      const results = await searchRecipes("Smoothie", { number: 1 }); // Buscar una receta
       if (results.length > 0) {
         this.recipe = await getRecipeDetails(results[0].id); // Obtener los datos de la primera receta
         console.log("Detalles de la receta seleccionada:", this.recipe);

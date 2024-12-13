@@ -134,69 +134,26 @@
     </div>
   </div>
 </template>
+
 <script>
 import { useSearchStore } from "src/stores/useSearchStore.js";
-import { getModelResponse } from "/services/api.js";
 
 export default {
   name: "CardTodayTip",
-  data() {
-    return {
-      modelResponseTitle: "Loading...", // Default text while data loads
-      modelResponseBody: "Please wait while we fetch your tip.",
-      exerciseQuery: "",
-      recipeQuery: "",
-    };
+  computed: {
+    modelResponseTitle() {
+      return this.searchStore.modelResponseTitle;
+    },
+    modelResponseBody() {
+      return this.searchStore.modelResponseBody;
+    },
   },
   mounted() {
-    this.fetchModelResponse();
+    this.searchStore.fetchModelResponse();
   },
-  methods: {
-    async fetchModelResponse() {
-      const searchStore = useSearchStore(); // Instancia del store
-      const cyclePhase = "Follicular";
-      const mood = "Energetic";
-      let inputText = `
-      Generate a tip for the ClearMoon app based on the user’s cycle: ${cyclePhase} phase and mood ${mood} (if included).
-
-Provide:
-	1.	A title encapsulated in double quotes (”) with a maximum of 36 characters (including spaces), written to be engaging and uplifting.
-	2.	A body encapsulated in double quotes (”) with a maximum of 132 characters (including spaces), written in an empathetic, fun, and personal tone.
-	3.	Make sure to name what’s the title and what’s the body.
-		4.	Recipe Labels: Create labels for searching a recipe related to the prompt, encapsulated in double quotes (”), and prefix them with “Recipe:”.
-	5.	Exercise Labels: Create labels for finding an exercise image related to the prompt, encapsulated in double quotes (”), and prefix them with “Exercise:”.`;
-
-      try {
-        const response = await getModelResponse(
-          "Qwen/Qwen2.5-Coder-32B-Instruct",
-          inputText
-        );
-
-        // Assuming response text is stored in `response.generated_text`
-        const generatedText = response[0].generated_text;
-        // Step 1: Extract Title
-        const titleMatch = generatedText.match(/Title:\s*"(.*?)"/);
-        this.modelResponseTitle = titleMatch
-          ? titleMatch[1]
-          : "Title not found";
-
-        // Step 2: Extract Body
-        const bodyMatch = generatedText.match(/Body:\s*"(.*?)"/);
-        this.modelResponseBody = bodyMatch ? bodyMatch[1] : "Body not found";
-
-        // // Debugging
-        // console.log("Extracted Title:", this.modelResponseTitle);
-        // console.log("Extracted Body:", this.modelResponseBody);
-
-        // Update the store
-        searchStore.updateModelResponse(
-          this.modelResponseTitle,
-          this.modelResponseBody
-        );
-      } catch (error) {
-        console.error("Error fetching model response:", error);
-      }
-    },
+  setup() {
+    const searchStore = useSearchStore();
+    return { searchStore };
   },
 };
 </script>
