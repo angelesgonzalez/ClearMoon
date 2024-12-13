@@ -1,8 +1,9 @@
 <template>
-  <div class="container flex flex-col items-start p-6 rounded-[18px]">
+  <div
+    class="container flex flex-col items-start p-6 rounded-[18px] cursor-pointer"
+    @click="goToRecipe">
     <div class="p-4">
       <h3 class="text-sm font-semibold opacity-60">Today's recipe</h3>
-
       <h2
         v-if="recipe && recipe.title"
         class="text-sm font-semibold capitalize">
@@ -13,7 +14,6 @@
     <div
       class="flex w-full h-[219px] items-center rounded-[18px] overflow-hidden">
       <div v-if="isLoading" class="text-center">Cargando receta...</div>
-
       <div v-else-if="error" class="">{{ error }}</div>
 
       <!-- Imagen de la receta -->
@@ -36,6 +36,7 @@
 <script>
 import { searchRecipes, getRecipeDetails } from "/services/api.js";
 import { useSearchStore } from "src/stores/useSearchStore.js";
+import { useRecipeStore } from "../stores/useRecipeStore";
 
 export default {
   name: "CardRecipe",
@@ -50,6 +51,17 @@ export default {
     spoonacularLabels() {
       const searchStore = useSearchStore();
       return searchStore.spoonacularLabels || [];
+    },
+  },
+  methods: {
+    goToRecipe() {
+      if (this.recipe && this.recipe.id) {
+        const recipeStore = useRecipeStore();
+        recipeStore.setCurrentRecipe(this.recipe);
+        this.$router.push(`/recipe/${this.recipe.id}`);
+      } else {
+        console.error("No se puede navegar: receta inválida.");
+      }
     },
   },
   async mounted() {
