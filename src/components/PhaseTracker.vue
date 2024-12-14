@@ -119,6 +119,6 @@ export default {
     /* Inner background */
       linear-gradient(270deg, hsla(251, 16%, 20%, 1), hsla(251, 19%, 54%, 1))
       border-box; /* Gradient border */
-  width: 360px;
+  /* width: 360px; */
 }
 </style>
