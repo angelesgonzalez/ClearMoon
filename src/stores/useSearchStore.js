@@ -4,6 +4,7 @@ import {
   searchRecipes,
   getModelResponse,
 } from "/services/api.js";
+import { useCycleStore } from "./useCycleStore.js"; // Import the cycle store
 
 export const useSearchStore = defineStore("searchStore", {
   state: () => ({
@@ -18,14 +19,15 @@ export const useSearchStore = defineStore("searchStore", {
     updateModelResponse(title, body) {
       this.modelResponseTitle = title;
       this.modelResponseBody = body;
-      // console.log("El store está funcionando", this.$state);
     },
 
     async fetchModelResponse() {
-      const cyclePhase = "Follicular";
-      const mood = "Energetic";
-      let inputText = `
+      // Access cycle and mood data from the cycle store
+      const cycleStore = useCycleStore();
+      const cyclePhase = cycleStore.currentPhase || "Unknown"; // Get current phase from cycleStore
+      const mood = cycleStore.mood || "Neutral";
 
+      let inputText = `
       Generate a tip for the ClearMoon app based on the user’s cycle: ${cyclePhase} phase and mood ${mood} (if included).
 
       Provide:
@@ -51,8 +53,6 @@ export const useSearchStore = defineStore("searchStore", {
         const exerciseLabelsMatch = generatedText.match(
           /Exercise Labels:\s*"(.*?)"/
         );
-        // console.log('Exercise Labels Match', exerciseLabelsMatch); //comprobando
-        // console.log("Recipe Labels Match", recipeLabelsMatch);
 
         this.updateModelResponse(
           titleMatch ? titleMatch[1] : "Title not found",
@@ -69,9 +69,7 @@ export const useSearchStore = defineStore("searchStore", {
       } catch (error) {
         console.error("Error fetching model response:", error);
       }
-      // console.log('this unsplashlabels', this.exerciseLabelsMatch);
     },
-
     async generateSearchData(label) {
       try {
         if (

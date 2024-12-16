@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-container bg-[#0A0910] text-white p-20">
+  <div class="flex flex-col bg-[#0A0910] text-white p-20">
     <!-- Header -->
     <Header></Header>
 
@@ -110,7 +110,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.recipe-container {
-}
-</style>
+<style scoped></style>

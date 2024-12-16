@@ -23,6 +23,11 @@
       </div>
     </div>
   </div>
+  <div>
+    <router-link to="/onboarding" class="text-blue-500 hover:underline">
+      Go to Onboarding
+    </router-link>
+  </div>
 </template>
 
 <script>
