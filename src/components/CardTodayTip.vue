@@ -1,10 +1,10 @@
 <template>
   <!-- Div-1 -->
   <div
-    class="bg-customPurpleCards text-white p-6 rounded-lg max-w-sm shadow-lg container h-[273px] flex flex-col items-start gap-[60px] self-stretch px-[17px] pt-[18px] pb-[28.34px] pl-[18px]">
+    class="bg-customPurpleCards text-white p-6 rounded-lg max-w-sm shadow-lg container flex flex-col items-start gap-[60px] self-stretch px-[17px] pt-[18px] pb-[28.34px] pl-[18px] flex-wrap">
     <h3 class="text-sm font-semibold opacity-60">Today's Boost</h3>
     <!-- Div-2 -->
-    <div class="flex w-[325px] flex-col items-start gap-4">
+    <div class="flex flex-col items-start gap-4">
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"

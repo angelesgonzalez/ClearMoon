@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex flex-col items-start p-6">
+  <div class="container flex flex-col items-start p-6 h-full w-full">
     <div class="p-4">
       <h3 class="text-sm font-semibold opacity-60">Today's move:</h3>
       <span>{{ title }}</span>
@@ -7,7 +7,7 @@
 
     <div
       v-if="image"
-      class="flex w-full h-[219px] items-center rounded-[18px] overflow-hidden">
+      class="flex w-full h-full items-center rounded-[18px] overflow-hidden">
       <img
         :src="image.urls.regular"
         :alt="image.alt_description || 'Exercise image'"

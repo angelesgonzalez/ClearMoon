@@ -4,7 +4,7 @@
     <!-- Left Section: Background Image -->
 
     <div
-      class="w-1/2 hidden lg:flex items-center justify-center bg-cover bg-center"
+      class="w-1/2 hidden lg:flex items-center justify-center bg-cover bg-center main"
       style="background-image: url('src/assets/onboarding-1.avif')"></div>
 
     <!-- Right Section: text -->
@@ -79,6 +79,9 @@ import { useCycleStore } from "../stores/useCycleStore.js";
 import ParticlesBackground from "src/components/ParticlesBackground.vue";
 
 export default {
+  components: {
+    ParticlesBackground,
+  },
   data() {
     return {
       step: 1,

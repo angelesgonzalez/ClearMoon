@@ -1,7 +1,7 @@
 <template>
   <div
     id="PhaseContainer"
-    class="relative p-8 rounded-2xl flex flex-col justify-between items-center bg-card bg-customPurpleCards lg:h-[602px]">
+    class="relative p-8 rounded-2xl flex flex-col justify-between items-center bg-card bg-customPurpleCards h-full">
     <!-- Inner Content -->
     <div class="flex flex-col items-center gap-2 justify-center flex-grow">
       <p class="text-lg text-white opacity-80">You’re in the</p>

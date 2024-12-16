@@ -1,9 +1,9 @@
 <template>
   <!-- Div-1 -->
   <div
-    class="bg-customPurpleCards text-white p-6 rounded-lg max-w-sm shadow-lg container h-[273px] flex flex-col justify-end items-start gap-[24px] self-stretch pt-[60px] pr-[43px] pb-[27px] pl-[25px]">
+    class=" text-white p-6 rounded-lg max-w-sm shadow-lg container flex flex-col justify-end items-start gap-[24px]  pt-[60px] pr-[43px] pb-[27px] pl-[25px] h-full w-full">
     <!-- Div-2 -->
-    <div class="flex w-[292px] flex-col items-start gap-4">
+    <div class="flex flex-col items-start gap-4">
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
