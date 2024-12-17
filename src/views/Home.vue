@@ -1,26 +1,27 @@
-<template>
+<template class="bg-black">
   <ParticlesBackground></ParticlesBackground>
 
-  <div class="min-h-screen bg-black text-white flex flex-col items-center">
+  <div
+    class="bg-black text-white flex flex-col items-center justify-center w-screen min-h-screen overflow-x-hidden">
     <!-- Header -->
-    <Header class="mt-3 mb-8"></Header>
+    <Header class="mt-3 mb-4"></Header>
 
     <!-- Main Content -->
     <div
-      class="grid grid-cols-1 md:grid-cols-[auto,auto,auto] gap-5 max-w-screen-lg px-4 w-full h-full main">
+      class="grid grid-cols-1 md:grid-cols-[auto,auto,auto] max-w-screen-lg w-full main gap-4 items-center justify-center">
       <!-- Left Column -->
-      <div class="flex flex-col gap-4 h-full md:order-1 order-2">
+      <div class="flex flex-col h-full md:order-1 order-2 gap-4 w-[360px]">
         <CardTodayTip />
         <CardRecipe />
       </div>
 
       <!-- Middle Column -->
-      <div class="flex flex-col h-full order-1">
+      <div class="flex flex-col h-full order-1 md:order-2 w-[360px]">
         <PhaseTracker></PhaseTracker>
       </div>
 
       <!-- Right Column -->
-      <div class="flex flex-col h-full gap-4 md:order-2 order-3">
+      <div class="flex flex-col h-full md:order-2 order-3 gap-4 w-[360px]">
         <CardExerciseTip />
         <CardLogMood />
       </div>

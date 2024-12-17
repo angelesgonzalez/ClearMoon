@@ -1,5 +1,5 @@
 <template>
-  <header class="flex flex-col items-center justify-start pt-8 text-white">
+  <header class="flex flex-col items-center justify-center text-white">
     <!-- Glowing Text -->
     <div class="relative">
       <!-- Glow Effect -->
