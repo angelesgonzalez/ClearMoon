@@ -27,7 +27,7 @@
         v-else
         src="src/assets/dummy-recipe.png"
         alt="Default recipe image"
-        class="w-full h-auto object-cover rounded-[18px]" />
+        class="w-full h-[219px] object-cover rounded-[18px]" />
     </div>
   </div>
 </template>
@@ -69,7 +69,7 @@ export default {
     try {
       // Asegurarse de que las etiquetas estén disponibles
       if (!searchStore.spoonacularLabels.length) {
-        searchStore.spoonacularLabels = ["Smoothie"]; // Etiqueta predeterminada
+        searchStore.spoonacularLabels = ["Oats"]; // Etiqueta predeterminada
       }
 
       // console.log("Etiquetas de Spoonacular:", this.spoonacularLabels);
@@ -90,7 +90,7 @@ export default {
             this.recipe.image || "src/assets/dummy-recipe.png";
         }
 
-        // console.log("Detalles de la receta seleccionada:", this.recipe);
+        console.log("Detalles de la receta seleccionada:", this.recipe);
       } else {
         this.error = "No se encontraron recetas.";
       }

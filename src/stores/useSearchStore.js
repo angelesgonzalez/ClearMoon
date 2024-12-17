@@ -1,10 +1,14 @@
+//Importing all I need
+
 import { defineStore } from "pinia";
 import {
   searchImages,
   searchRecipes,
   getModelResponse,
 } from "/services/api.js";
-import { useCycleStore } from "./useCycleStore.js"; // Import the cycle store
+import { useCycleStore } from "./useCycleStore.js";
+
+//Exporting API response and Search for the rest of components
 
 export const useSearchStore = defineStore("searchStore", {
   state: () => ({
@@ -21,22 +25,25 @@ export const useSearchStore = defineStore("searchStore", {
       this.modelResponseBody = body;
     },
 
+    //Requesting a response from HuggingFace, it sends an input with some rules and cyclePhase + Mood from users.
+
     async fetchModelResponse() {
-      // Access cycle and mood data from the cycle store
       const cycleStore = useCycleStore();
-      const cyclePhase = cycleStore.currentPhase || "Unknown"; // Get current phase from cycleStore
+      const cyclePhase = cycleStore.currentPhase || "Unknown";
       const mood = cycleStore.mood || "Neutral";
 
-      let inputText = `
+      //Prompt for the model
+
+      const inputText = `
       Generate a tip for the ClearMoon app based on the user’s cycle: ${cyclePhase} phase and mood ${mood} (if included).
 
       Provide:
-	    1.	A title encapsulated in double quotes (”) with a maximum of 36 characters (including spaces), written to be engaging and uplifting.
-	    2.	A body encapsulated in double quotes (”) with a maximum of 132 characters (including spaces), written in an empathetic, fun, and personal tone.
-	    3.	Make sure to name what’s the title and what’s the body.
-	    4. Create recipe-related labels: Generate 3 distinct one-word labels for searching a recipe, each encapsulated in double quotes (”), and list them after "Recipe Labels:".
-      5. Create exercise-related labels: Generate 3 distinct one-word labels for finding an exercise image, each encapsulated in double quotes (”), and list them after "Exercise Labels:".
-      6. Ensure all outputs are combined in a single paragraph with clearly labeled sections for easy parsing.`;
+        1. A title encapsulated in double quotes (”) with a maximum of 36 characters (including spaces), written to be engaging and uplifting.
+        2. A body encapsulated in double quotes (”) with a maximum of 132 characters (including spaces), written in an empathetic, fun, and personal tone.
+        3. Make sure to name what’s the title and what’s the body.
+        4. Create recipe-related labels: Generate 3 distinct one-word labels for searching a recipe, each encapsulated in double quotes (”), and list them after "Recipe Labels:".
+        5. Create exercise-related labels: Generate 3 distinct one-word labels for finding an exercise image, each encapsulated in double quotes (”), and list them after "Exercise Labels:".
+        6. Ensure all outputs are combined in a single paragraph with clearly labeled sections for easy parsing.`;
 
       try {
         const response = await getModelResponse(
@@ -44,33 +51,64 @@ export const useSearchStore = defineStore("searchStore", {
           inputText
         );
 
+        if (!response || !response[0] || !response[0].generated_text) {
+          console.error("Generated text is missing from the response");
+          return;
+        }
+
         const generatedText = response[0].generated_text;
-        const titleMatch = generatedText.match(/Title:\s*"(.*?)"/);
-        const bodyMatch = generatedText.match(/Body:\s*"(.*?)"/);
-        const recipeLabelsMatch = generatedText.match(
-          /Recipe Labels:\s*"(.*?)"/
+        console.log("Generated Text:", generatedText);
+
+        // Normalising text to prevent problems
+        const normalizedText = generatedText.replace(/\s+/g, " ").trim();
+        console.log("Normalized Text:", normalizedText);
+
+        // Extracting title,body, labels with regex
+
+        const titleMatch = normalizedText.match(/Title:\s*["“”]([^"“”]*)["“”]/);
+        const bodyMatch = normalizedText.match(/Body:\s*["“”]([^"“”]*)["“”]/);
+
+        const title =
+          titleMatch && titleMatch[1] ? titleMatch[1].trim() : "No Title Found";
+        const body =
+          bodyMatch && bodyMatch[1] ? bodyMatch[1].trim() : "No Body Found";
+
+        console.log("Extracted Title:", title);
+        console.log("Extracted Body:", body);
+
+        // Regex - LABELS
+        const recipeLabelsMatch = normalizedText.match(
+          /Recipe Labels:\s*"([^"]+)"\s*"([^"]+)"\s*"([^"]+)"/
         );
-        const exerciseLabelsMatch = generatedText.match(
-          /Exercise Labels:\s*"(.*?)"/
+        const exerciseLabelsMatch = normalizedText.match(
+          /Exercise Labels:\s*"([^"]+)"\s*"([^"]+)"\s*"([^"]+)"/
         );
 
-        this.updateModelResponse(
-          titleMatch ? titleMatch[1] : "Title not found",
-          bodyMatch ? bodyMatch[1] : "Body not found"
-        );
-
-        this.spoonacularLabels = recipeLabelsMatch
-          ? [recipeLabelsMatch[1].trim()]
+        const recipeLabels = recipeLabelsMatch
+          ? [recipeLabelsMatch[1], recipeLabelsMatch[2], recipeLabelsMatch[3]]
+          : [];
+        const exerciseLabels = exerciseLabelsMatch
+          ? [
+              exerciseLabelsMatch[1],
+              exerciseLabelsMatch[2],
+              exerciseLabelsMatch[3],
+            ]
           : [];
 
-        this.unsplashLabels = exerciseLabelsMatch
-          ? [exerciseLabelsMatch[1].trim()]
-          : [];
+        console.log("Extracted Recipe Labels:", recipeLabels);
+        console.log("Extracted Exercise Labels:", exerciseLabels);
+
+        // Updating the store with extracted values
+        this.updateModelResponse(title, body);
+        this.spoonacularLabels = recipeLabels;
+        this.unsplashLabels = exerciseLabels;
       } catch (error) {
-        console.error("Error fetching model response:", error);
+        console.error("Error processing generated text:", error);
       }
     },
-    async generateSearchData(label) {
+    // Labels sent to Unsplash to get an image + spoonacular to get a recipe
+
+    async generateSearchData() {
       try {
         if (
           Array.isArray(this.unsplashLabels) &&
@@ -81,7 +119,7 @@ export const useSearchStore = defineStore("searchStore", {
 
           if (!this.image) {
             console.warn(
-              "No se encontraron imágenes para la etiqueta:",
+              "No images found. Label used:",
               this.unsplashLabels[0]
             );
           }
@@ -96,13 +134,13 @@ export const useSearchStore = defineStore("searchStore", {
 
           if (!this.recipe) {
             console.warn(
-              "No se encontraron recetas para la etiqueta:",
+              "Recipes no found. Label used:",
               this.spoonacularLabels[0]
             );
           }
         }
       } catch (error) {
-        console.error("Error generando datos de búsqueda:", error);
+        console.error("Error:", error);
       }
     },
   },

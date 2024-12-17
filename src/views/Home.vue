@@ -1,15 +1,15 @@
 <template>
   <ParticlesBackground></ParticlesBackground>
 
-  <div class="min-h-screen bg-dark text-white flex flex-col items-center">
+  <div class="min-h-screen bg-black text-white flex flex-col items-center">
     <!-- Header -->
-    <Header class="mt-8 mb-8"></Header>
+    <Header class="mt-3 mb-8"></Header>
 
     <!-- Main Content -->
     <div
       class="grid grid-cols-1 md:grid-cols-[auto,auto,auto] gap-5 max-w-screen-lg px-4 w-full h-full main">
       <!-- Left Column -->
-      <div class="flex flex-col gap-4 h-full md:order-1 order-2 w-full">
+      <div class="flex flex-col gap-4 h-full md:order-1 order-2">
         <CardTodayTip />
         <CardRecipe />
       </div>
@@ -55,11 +55,6 @@ export default {
 </script>
 
 <style>
-/* Background */
-.bg-dark {
-  background-color: #13111f;
-}
-
 .particles {
   position: absolute;
   top: 0;

@@ -7,11 +7,11 @@
 
     <div
       v-if="image"
-      class="flex w-full h-full items-center rounded-[18px] overflow-hidden">
+      class="flex w-full items-center rounded-[18px] overflow-hidden">
       <img
         :src="image.urls.regular"
         :alt="image.alt_description || 'Exercise image'"
-        class="w-full h-auto object-cover rounded-[18px]" />
+        class="w-full h-[219px] object-cover rounded-[18px]" />
     </div>
 
     <!-- No Image Found -->

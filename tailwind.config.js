@@ -7,6 +7,7 @@ export default {
         white: "#F9F8FC",
         customPurpleCards: "#13111F",
         customAccent: "#9E75F0",
+        black: "#0A0910",
       },
       fontFamily: {
         exceptional: ["Muttia", "serif"], // Para títulos destacados
