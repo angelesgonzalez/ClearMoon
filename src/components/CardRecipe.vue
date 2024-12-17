@@ -7,16 +7,17 @@
       <h2
         v-if="recipe && recipe.title"
         class="text-sm font-semibold capitalize">
-        {{ recipe.title }}
+        {{ capitalizedTitle }}
       </h2>
     </div>
 
-    <div class="flex w-full items-center rounded-[18px] overflow-hidden relative group">
+    <div
+      class="flex w-full items-center rounded-[18px] overflow-hidden relative group">
       <div v-if="isLoading" class="text-center">Cargando receta...</div>
       <div v-else-if="error" class="">{{ error }}</div>
 
       <!-- Recipe Image -->
-      <img 
+      <img
         v-else-if="recipe && recipe.image"
         :src="recipe.image"
         :alt="recipe.title || 'Recipe image'"
@@ -30,14 +31,13 @@
         class="w-full h-[219px] object-cover rounded-[18px]" />
 
       <!-- Overlay with Text -->
-      <div 
+      <div
         class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-sm font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         View Recipe
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import { searchRecipes, getRecipeDetails } from "/services/api.js";
@@ -57,6 +57,16 @@ export default {
     spoonacularLabels() {
       const searchStore = useSearchStore();
       return searchStore.spoonacularLabels || [];
+    },
+
+    capitalizedTitle() {
+      if (this.recipe && this.recipe.title) {
+        return (
+          this.recipe.title.charAt(0).toUpperCase() +
+          this.recipe.title.slice(1).toLowerCase()
+        );
+      }
+      return "No Title Available";
     },
   },
   methods: {
