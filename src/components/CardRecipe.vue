@@ -11,26 +11,33 @@
       </h2>
     </div>
 
-    <div class="flex w-full items-center rounded-[18px] overflow-hidden">
+    <div class="flex w-full items-center rounded-[18px] overflow-hidden relative group">
       <div v-if="isLoading" class="text-center">Cargando receta...</div>
       <div v-else-if="error" class="">{{ error }}</div>
 
-      <!-- Imagen de la receta -->
-      <img
+      <!-- Recipe Image -->
+      <img 
         v-else-if="recipe && recipe.image"
         :src="recipe.image"
         :alt="recipe.title || 'Recipe image'"
-        class="w-full h-auto object-cover rounded-[18px]" />
+        class="w-full h-[219px] object-cover rounded-[18px] transition-opacity duration-300" />
 
-      <!-- Imagen por defecto -->
+      <!-- Default Image -->
       <img
         v-else
         src="src/assets/dummy-recipe.png"
         alt="Default recipe image"
         class="w-full h-[219px] object-cover rounded-[18px]" />
+
+      <!-- Overlay with Text -->
+      <div 
+        class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-sm font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        View Recipe
+      </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import { searchRecipes, getRecipeDetails } from "/services/api.js";
@@ -59,7 +66,7 @@ export default {
         recipeStore.setCurrentRecipe(this.recipe);
         this.$router.push(`/recipe/${this.recipe.id}`);
       } else {
-        console.error("No se puede navegar: receta inválida.");
+        console.error("Invalid recipe.");
       }
     },
   },
@@ -67,36 +74,34 @@ export default {
     const searchStore = useSearchStore();
 
     try {
-      // Asegurarse de que las etiquetas estén disponibles
-      if (!searchStore.spoonacularLabels.length) {
-        searchStore.spoonacularLabels = ["Oats"]; // Etiqueta predeterminada
-      }
+      await searchStore.fetchModelResponse();
+      await searchStore.setDefaultLabels(["Oats"]);
 
-      // console.log("Etiquetas de Spoonacular:", this.spoonacularLabels);
+      const labelToSearch = this.spoonacularLabels[0] || "Oats";
+      // Log para verificar qué etiqueta se usa para buscar
+      console.log("LABEL (RECIPE) ", labelToSearch);
 
-      // busqueda de recetas
-      const results = await searchRecipes(this.spoonacularLabels[0], {
-        number: 1,
-      });
+      // Searching for a recipe, it only ask for one.
+      const results = await searchRecipes(labelToSearch, { number: 1 });
 
       if (results.length > 0) {
-        // detalles de la receta
         this.recipe = await getRecipeDetails(results[0].id);
 
-        // Fallback para propiedades faltantes
-        if (this.recipe) {
-          this.recipe.title = this.recipe.title || "Today's Smothie";
-          this.recipe.image =
-            this.recipe.image || "src/assets/dummy-recipe.png";
-        }
+        // Fallback
+        const defaultRecipe = {
+          title: "Today's Smoothie",
+          image: "src/assets/dummy-recipe.png",
+        };
 
-        console.log("Detalles de la receta seleccionada:", this.recipe);
+        this.recipe = { ...defaultRecipe, ...this.recipe };
+
+        // console.log("Detalles de la receta seleccionada:", this.recipe);
       } else {
-        this.error = "No se encontraron recetas.";
+        this.error = "Recipe no found";
       }
     } catch (error) {
-      console.error("Error en la llamada:", error);
-      this.error = "Hubo un problema al cargar la receta.";
+      console.error("Request Error:", error);
+      this.error = "Troubles loading the recipe";
     } finally {
       this.isLoading = false;
     }

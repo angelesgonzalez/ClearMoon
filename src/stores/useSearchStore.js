@@ -143,5 +143,11 @@ export const useSearchStore = defineStore("searchStore", {
         console.error("Error:", error);
       }
     },
+    // NUEVA ACCIÓN: Establecer etiquetas predeterminadas
+    setDefaultLabels(labels) {
+      if (!this.spoonacularLabels.length) {
+        this.spoonacularLabels = labels;
+      }
+    },
   },
 });

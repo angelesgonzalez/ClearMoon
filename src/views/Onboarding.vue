@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     cycleStore() {
-      return useCycleStore(); // Access cycle store
+      return useCycleStore();
     },
   },
   methods: {
