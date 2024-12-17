@@ -52,4 +52,8 @@ ClearMoon is a health-focused web application designed to support women in under
 
 ### Screenshots
 
-(Add screenshots here showing key features of the application.)
+![Home View](src/assets/gifs-readme/home.gif "Home.vue")
+
+![Onboarding](src/assets/gifs-readme/onboarding.gif "Onboarding.vue")
+
+![Recipe View](src/assets/gifs-readme/recipeview.gif "Recipe.vue")
